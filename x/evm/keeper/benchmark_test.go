@@ -11,7 +11,7 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 
 	ethermint "github.com/Karan-3108/ethermint/types"
-	"github.com/Karan-3108108/ethermint/x/evm/types"
+	"github.com/Karan-3108/ethermint/x/evm/types"
 	ethtypes "github.com/ethereum/go-ethereum/core/types"
 )
 

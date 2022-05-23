@@ -10,8 +10,8 @@ import (
 	ethtypes "github.com/ethereum/go-ethereum/core/types"
 
 	"github.com/Karan-3108/ethermint/x/evm/keeper"
-	"github.com/Karan-3108108/ethermint/x/evm/statedb"
-	"github.com/Karan-3108108/ethermint/x/evm/types"
+	"github.com/Karan-3108/ethermint/x/evm/statedb"
+	"github.com/Karan-3108/ethermint/x/evm/types"
 )
 
 // LogRecordHook records all the logs

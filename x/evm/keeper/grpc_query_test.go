@@ -14,10 +14,10 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
-	"github.com/Karan-3108108/ethermint/crypto/ethsecp256k1"
-	"github.com/Karan-3108108/ethermint/server/config"
-	ethermint "github.com/Karan-3108108/ethermint/types"
-	"github.com/Karan-3108108/ethermint/x/evm/types"
+	"github.com/Karan-3108/ethermint/crypto/ethsecp256k1"
+	"github.com/Karan-3108/ethermint/server/config"
+	ethermint "github.com/Karan-3108/ethermint/types"
+	"github.com/Karan-3108/ethermint/x/evm/types"
 )
 
 // Not valid Ethereum address

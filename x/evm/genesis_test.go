@@ -6,9 +6,9 @@ import (
 	"github.com/ethereum/go-ethereum/common"
 
 	"github.com/Karan-3108/ethermint/crypto/ethsecp256k1"
-	"github.com/Karan-3108108/ethermint/x/evm"
-	"github.com/Karan-3108108/ethermint/x/evm/statedb"
-	"github.com/Karan-3108108/ethermint/x/evm/types"
+	"github.com/Karan-3108/ethermint/x/evm"
+	"github.com/Karan-3108/ethermint/x/evm/statedb"
+	"github.com/Karan-3108/ethermint/x/evm/types"
 	authtypes "github.com/cosmos/cosmos-sdk/x/auth/types"
 )
 
