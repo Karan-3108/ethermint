@@ -13,6 +13,9 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
+      - uses: actions/setup-go@v3
+        with:
+          go-version: 1.17
       - uses: actions/checkout@v3
       - uses: technote-space/get-diff-action@v6.0.1
         with:
@@ -22,8 +25,7 @@ jobs:
             go.sum
       - uses: golangci/golangci-lint-action@v3
         with:
-          # Required: the version of golangci-lint is required and must be specified without patch version: we always use the latest patch version.
-          version: v1.44
+          version: latest
           args: --timeout 10m
           github-token: ${{ secrets.github_token }}
         # Check only if there are differences in the source code
@@ -40,10 +42,6 @@ jobs:
             docs/**/*.md
             x/**/*.md
             README.md
-      - uses: nosborn/github-action-markdown-cli@v3.0.1
-        with:
-          files: .
-          config_file: .markdownlint.yml
-          ignore_path: .markdownlintignore
+      - uses: articulate/actions-markdownlint@v1.1.0
         # Check only if there are differences in the source code
         if: env.GIT_DIFF

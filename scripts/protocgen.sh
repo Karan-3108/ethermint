@@ -13,15 +13,14 @@ protoc_gen_gocosmos() {
 
 protoc_gen_doc() {
   go get -u github.com/pseudomuto/protoc-gen-doc/cmd/protoc-gen-doc 2>/dev/null
-}
+} 
 
 protoc_gen_gocosmos
 protoc_gen_doc
 
 proto_dirs=$(find ./proto -path -prune -o -name '*.proto' -print0 | xargs -0 -n1 dirname | sort | uniq)
-# TODO: migrate to `buf build`
 for dir in $proto_dirs; do
-  buf alpha protoc \
+  buf protoc \
   -I "proto" \
   -I "third_party/proto" \
   --gocosmos_out=plugins=interfacetype+grpc,\
@@ -32,14 +31,14 @@ Mgoogle/protobuf/any.proto=github.com/cosmos/cosmos-sdk/codec/types:. \
 done
 
 # command to generate docs using protoc-gen-doc
-# TODO: migrate to `buf build`
-buf alpha protoc \
+buf protoc \
 -I "proto" \
 -I "third_party/proto" \
---doc_out=./docs/protocol \
+--doc_out=./docs/api \
 --doc_opt=./docs/protodoc-markdown.tmpl,proto-docs.md \
 $(find "$(pwd)/proto" -maxdepth 5 -name '*.proto')
+# go mod tidy
 
 # move proto files to the right places
-cp -r github.com/Karan-3108/fortress/v*/x/* x/
+cp -r github.com/Karan-3108/ethermint/* ./
 rm -rf github.com

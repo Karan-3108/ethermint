@@ -63,14 +63,12 @@ func CreateRequest(method string, params interface{}) Request {
 	}
 }
 
-func CallWithSleep(t *testing.T, method string, params interface{}, sleep time.Duration) *Response {
+func Call(t *testing.T, method string, params interface{}) *Response {
 	req, err := json.Marshal(CreateRequest(method, params))
 	require.NoError(t, err)
 
 	var rpcRes *Response
-	if sleep > 0 {
-		time.Sleep(sleep)
-	}
+	time.Sleep(1 * time.Second)
 
 	httpReq, err := http.NewRequestWithContext(context.Background(), "POST", HOST, bytes.NewBuffer(req))
 	if err != nil {
@@ -94,10 +92,6 @@ func CallWithSleep(t *testing.T, method string, params interface{}, sleep time.D
 	require.Nil(t, rpcRes.Error)
 
 	return rpcRes
-}
-
-func Call(t *testing.T, method string, params interface{}) *Response {
-	return CallWithSleep(t, method, params, time.Second)
 }
 
 func CallWithError(method string, params interface{}) (*Response, error) {

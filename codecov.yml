@@ -18,11 +18,11 @@ coverage:
         flags:
           - app
       modules:
-        target: 90%
+        target: 70%
         flags:
           - modules
       core:
-        target: 90%
+        target: 50%
         flags:
           - core
       client:
@@ -38,33 +38,29 @@ comment:
 flags:
   app:
     paths:
-      - "app"
+      - "app/"
   modules:
     paths:
-      - "x"
-      - "!x/**/client" # ignore client package
+      - "x/"
+      - "!x/**/client/" # ignore client package
   core:
     paths:
-      - "core"
-      - "crypto"
-      - "types"
+      - "core/"
+      - "crypto/"
+      - "types/"
   clients:
     paths:
-      - "x/**/client"
-      - "x/**/keeper/grpc_query.go"
+      - "rpc/"
+      - "client/"
+      - "x/**/client/"
 
 ignore:
   - "docs"
-  - "**/*.md"
+  - "*.md"
   - "cmd"
-  - "client"
-  - "proto"
-  - "third_party"
-  - "testutil"
-  - "**/test_*.go"
   - "**/*.pb.go"
   - "**/*.pb.gw.go"
-  - "x/**/module.go"
-  - "scripts"
-  - "ibc/testing"
-  - "version"
+  - "types/*.pb.go"
+  - "x/**/*.pb.gw.go"
+  - "tests/*"
+  - "scripts/"

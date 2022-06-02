@@ -1,23 +1,30 @@
-FROM golang:stretch AS build-env
+FROM golang:alpine AS build-env
 
-WORKDIR /go/src/github.com/Karan-3108/fortress
+# Set up dependencies
+ENV PACKAGES git build-base
 
-RUN apt update
-RUN apt install git -y
+# Set working directory for the build
+WORKDIR /go/src/github.com/Karan-3108/ethermint
 
+# Install dependencies
+RUN apk add --update $PACKAGES
+RUN apk add linux-headers
+
+# Add source files
 COPY . .
 
+# Make the binary
 RUN make build
 
-FROM golang:stretch
+# Final image
+FROM alpine:3.15
 
-RUN apt update
-RUN apt install ca-certificates jq -y
+# Install ca-certificates
+RUN apk add --update ca-certificates jq
+WORKDIR /
 
-WORKDIR /root
+# Copy over binaries from the build-env
+COPY --from=build-env /go/src/github.com/Karan-3108/ethermint/build/ethermintd /usr/bin/ethermintd
 
-COPY --from=build-env /go/src/github.com/Karan-3108/fortress/build/fortressd /usr/bin/fortressd
-
-EXPOSE 26656 26657 1317 9090
-
-CMD ["fortressd"]
+# Run ethermintd by default
+CMD ["ethermintd"]

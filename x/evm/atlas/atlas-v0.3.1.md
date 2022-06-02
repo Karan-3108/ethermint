@@ -174,8 +174,8 @@ type Params struct {
 
 ### JSON-RPC
 
-See the Ethermint [JSON-RPC docs](https://fortress.dev/basics/json_rpc.html) for reference.
+See the Ethermint [JSON-RPC docs](https://torque.dev/basics/json_rpc.html) for reference.
 
 ## Documentation and Specification
 
-* Ethermint documentation: [https://fortress.dev](https://fortress.dev)
+* Ethermint documentation: [https://torque.dev](https://torque.dev)

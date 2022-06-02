@@ -87,7 +87,7 @@ f_install_protoc_gen_gocosmos() {
     f_print_installing_with_padding protoc-gen-gocosmos
     
     if ! grep "github.com/gogo/protobuf => github.com/regen-network/protobuf" go.mod &>/dev/null ; then
-        echo -e "\tPlease run this command from somewhere inside the fortress folder."
+        echo -e "\tPlease run this command from somewhere inside the ethermint folder."
         return 1
     fi
     
@@ -113,7 +113,7 @@ f_install_protoc_gen_swagger() {
     fi
     
     pushd "${TEMPDIR}" >/dev/null
-    go get github.com/grpc-ecosystem/grpc-gateway/protoc-gen-swagger
+    go install github.com/grpc-ecosystem/grpc-gateway/protoc-gen-swagger@latest
     npm install -g swagger-combine
     popd >/dev/null
     f_print_done

@@ -1,3 +1,9 @@
+"C:Crypto":
+  - crypto/**/*
+"C:Encoding":
+  - encoding/**/*
+"C:JSON-RPC":
+  - ethereum/rpc/**/*
 "C:Proto":
   - proto/**/*
   - third_party/**/*
@@ -5,6 +11,8 @@
   - /**/*.pb.gw.go
 "C:Types":
   - types/**/*
+"C:x/evm":
+  - x/evm/**/*/
 "Type: Build":
   - Makefile
   - Dockerfile

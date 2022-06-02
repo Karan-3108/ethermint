@@ -18,14 +18,11 @@ lint:
     - RPC_REQUEST_RESPONSE_UNIQUE
     - COMMENT_MESSAGE
   ignore:
-    - cosmos
     - tendermint
     - gogoproto
     - cosmos_proto
     - google
     - confio
-    - ibc
-    - proofs.proto
 breaking:
   use:
     - FILE
