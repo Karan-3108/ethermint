@@ -17,10 +17,10 @@ RPC_PORT="854"
 IP_ADDR="0.0.0.0"
 
 KEY="mykey"
-CHAINID="ethermint_9000-1"
+CHAINID="fortress_9000-1"
 MONIKER="mymoniker"
 
-## default port prefixes for ethermintd
+## default port prefixes for fortressd
 NODE_P2P_PORT="2660"
 NODE_PORT="2663"
 NODE_RPC_PORT="2666"
@@ -52,29 +52,29 @@ done
 
 set -euxo pipefail
 
-DATA_DIR=$(mktemp -d -t ethermint-datadir.XXXXX)
+DATA_DIR=$(mktemp -d -t fortress-datadir.XXXXX)
 
 if [[ ! "$DATA_DIR" ]]; then
     echo "Could not create $DATA_DIR"
     exit 1
 fi
 
-# Compile ethermint
-echo "compiling ethermint"
+# Compile fortress
+echo "compiling fortress"
 make build
 
 # PID array declaration
 arr=()
 
 init_func() {
-    "$PWD"/build/ethermintd keys add $KEY"$i" --keyring-backend test --home "$DATA_DIR$i" --no-backup --algo "eth_secp256k1"
-    "$PWD"/build/ethermintd init $MONIKER --chain-id $CHAINID --home "$DATA_DIR$i"
-    "$PWD"/build/ethermintd add-genesis-account \
-    "$("$PWD"/build/ethermintd keys show "$KEY$i" --keyring-backend test -a --home "$DATA_DIR$i")" 1000000000000000000aphoton,1000000000000000000stake \
+    "$PWD"/build/fortressd keys add $KEY"$i" --keyring-backend test --home "$DATA_DIR$i" --no-backup --algo "eth_secp256k1"
+    "$PWD"/build/fortressd init $MONIKER --chain-id $CHAINID --home "$DATA_DIR$i"
+    "$PWD"/build/fortressd add-genesis-account \
+    "$("$PWD"/build/fortressd keys show "$KEY$i" --keyring-backend test -a --home "$DATA_DIR$i")" 1000000000000000000afortress,1000000000000000000stake \
     --keyring-backend test --home "$DATA_DIR$i"
-    "$PWD"/build/ethermintd gentx "$KEY$i" 1000000000000000000stake --chain-id $CHAINID --keyring-backend test --home "$DATA_DIR$i"
-    "$PWD"/build/ethermintd collect-gentxs --home "$DATA_DIR$i"
-    "$PWD"/build/ethermintd validate-genesis --home "$DATA_DIR$i"
+    "$PWD"/build/fortressd gentx "$KEY$i" 1000000000000000000stake --chain-id $CHAINID --keyring-backend test --home "$DATA_DIR$i"
+    "$PWD"/build/fortressd collect-gentxs --home "$DATA_DIR$i"
+    "$PWD"/build/fortressd validate-genesis --home "$DATA_DIR$i"
 
     if [[ $MODE == "pending" ]]; then
       ls $DATA_DIR$i
@@ -103,18 +103,17 @@ init_func() {
 }
 
 start_func() {
-    echo "starting ethermint node $i in background ..."
-    "$PWD"/build/ethermintd start --pruning=nothing --rpc.unsafe \
+    echo "starting fortress node $i in background ..."
+    "$PWD"/build/fortressd start --pruning=nothing --rpc.unsafe \
     --p2p.laddr tcp://$IP_ADDR:$NODE_P2P_PORT"$i" --address tcp://$IP_ADDR:$NODE_PORT"$i" --rpc.laddr tcp://$IP_ADDR:$NODE_RPC_PORT"$i" \
     --json-rpc.address=$IP_ADDR:$RPC_PORT"$i" \
-    --json-rpc.api="eth,txpool,personal,net,debug,web3" \
     --keyring-backend test --home "$DATA_DIR$i" \
     >"$DATA_DIR"/node"$i".log 2>&1 & disown
 
-    ETHERMINT_PID=$!
-    echo "started ethermint node, pid=$ETHERMINT_PID"
+    AMBINET_PID=$!
+    echo "started fortress node, pid=$AMBINET_PID"
     # add PID to array
-    arr+=("$ETHERMINT_PID")
+    arr+=("$AMBINET_PID")
 
     if [[ $MODE == "pending" ]]; then
       echo "waiting for the first block..."
@@ -139,18 +138,8 @@ echo "done sleeping"
 
 set +e
 
-if [[ -z $TEST || $TEST == "integration" ]] ; then
-    time_out=300s
-
-    for i in $(seq 1 "$TEST_QTD"); do
-        HOST_RPC=http://$IP_ADDR:$RPC_PORT"$i"
-        echo "going to test ethermint node $HOST_RPC ..."
-        MODE=$MODE HOST=$HOST_RPC go test ./tests/e2e/... -timeout=$time_out -v -short
-        TEST_FAIL=$?
-    done
-fi
-
 if [[ -z $TEST || $TEST == "rpc" ||  $TEST == "pending" ]]; then
+
     time_out=300s
     if [[ $TEST == "pending" ]]; then
       time_out=60m0s
@@ -158,21 +147,21 @@ if [[ -z $TEST || $TEST == "rpc" ||  $TEST == "pending" ]]; then
 
     for i in $(seq 1 "$TEST_QTD"); do
         HOST_RPC=http://$IP_ADDR:$RPC_PORT"$i"
-        echo "going to test ethermint node $HOST_RPC ..."
-        MODE=$MODE HOST=$HOST_RPC go test ./tests/rpc/... -timeout=$time_out -v -short
+        echo "going to test fortress node $HOST_RPC ..."
+        MODE=$MODE HOST=$HOST_RPC go test ./tests/... -timeout=$time_out -v -short
 
-        TEST_FAIL=$?
+        RPC_FAIL=$?
     done
 
 fi
 
 stop_func() {
-    ETHERMINT_PID=$i
-    echo "shutting down node, pid=$ETHERMINT_PID ..."
+    AMBINET_PID=$i
+    echo "shutting down node, pid=$AMBINET_PID ..."
 
-    # Shutdown ethermint node
-    kill -9 "$ETHERMINT_PID"
-    wait "$ETHERMINT_PID"
+    # Shutdown fortress node
+    kill -9 "$AMBINET_PID"
+    wait "$AMBINET_PID"
 
     if [ $REMOVE_DATA_DIR == "true" ]
     then
@@ -184,8 +173,8 @@ for i in "${arr[@]}"; do
     stop_func "$i"
 done
 
-if [[ (-z $TEST || $TEST == "rpc" || $TEST == "integration" ) && $TEST_FAIL -ne 0 ]]; then
-    exit $TEST_FAIL
+if [[ (-z $TEST || $TEST == "rpc") && $RPC_FAIL -ne 0 ]]; then
+    exit $RPC_FAIL
 else
     exit 0
 fi

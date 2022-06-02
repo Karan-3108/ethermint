@@ -12,12 +12,16 @@ vendor/
 .venv/
 .tox/
 *.min.js
-*.pb.gw.go
+
+# Ignore proto
+*.proto
 
 # Common test paths
 test/
 tests/
 *_test.go
+*.pb.gw.go
+*.pb.go
 
 # Semgrep rules folder
 .semgrep
