@@ -5,8 +5,8 @@ import (
 
 	sdk "github.com/cosmos/cosmos-sdk/types"
 
+	"github.com/Karan-3108/ethermint/x/feemarket/migrations/v010/types"
 	v09types "github.com/Karan-3108/ethermint/x/feemarket/migrations/v09/types"
-	"github.com/Karan-3108/ethermint/x/feemarket/types"
 	paramtypes "github.com/cosmos/cosmos-sdk/x/params/types"
 )
 
